@@ -2548,7 +2548,7 @@ class MaskRCNN():
             image = skimage.io.imread(PATH_IMG)
 
             # Run object detection
-            result = model.detect([image], verbose=1)
+            result = self.detect([image], verbose=1)
 
             results.append(result)
             images.append(image)
