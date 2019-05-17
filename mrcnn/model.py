@@ -12,6 +12,7 @@ import random
 import datetime
 import re
 import math
+import skimage
 import logging
 from collections import OrderedDict
 import multiprocessing
