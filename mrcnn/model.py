@@ -2537,6 +2537,23 @@ class MaskRCNN():
             })
         return results
 
+    def detect_dimples(self, dir_path):
+        images = []
+        results = []
+        img_names = os.listdir(dir_path)
+
+        for img_name in img_names:
+            PATH_IMG = os.path.join(dir_path, img_name)
+            image = skimage.io.imread(PATH_IMG)
+
+            # Run object detection
+            result = model.detect([image], verbose=1)
+
+            results.append(result)
+            images.append(image)
+
+        return images, results
+
     def detect_molded(self, molded_images, image_metas, verbose=0):
         """Runs the detection pipeline, but expect inputs that are
         molded already. Used mostly for debugging and inspecting
