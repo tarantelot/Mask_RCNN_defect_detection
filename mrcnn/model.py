@@ -2553,7 +2553,7 @@ class MaskRCNN():
             results.append(result)
             images.append(image)
 
-        return images, results
+        return images, results, img_names
 
     def detect_molded(self, molded_images, image_metas, verbose=0):
         """Runs the detection pipeline, but expect inputs that are
