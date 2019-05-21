@@ -177,7 +177,12 @@ def save_results_to_folder(image, img_name, folder_name, boxes, class_ids, class
     
     N = boxes.shape[0]
 
-    if not N == 0:
+    if not N:
+        IMG_PATH = os.path.join(folder_name, PATH_GOOD)
+        IMG_PATH = os.path.join(IMG_PATH, img_name)
+        imsave(IMG_PATH, np.array(image))
+        
+    else:
         for i in range(N):
             #_, ax = plt.subplots(nrows=1, ncols=1, figsize=(16, 16))
 
@@ -208,10 +213,6 @@ def save_results_to_folder(image, img_name, folder_name, boxes, class_ids, class
         IMG_PATH = os.path.join(folder_name, PATH_BAD)
         IMG_PATH = os.path.join(IMG_PATH, img_name)
         plt.savefig(IMG_PATH)
-    else:
-        IMG_PATH = os.path.join(folder_name, PATH_GOOD)
-        IMG_PATH = os.path.join(IMG_PATH, img_name)
-        imsave(IMG_PATH, np.array(image))
 
 
 def display_differences(image,
