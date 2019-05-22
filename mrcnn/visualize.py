@@ -179,50 +179,22 @@ def save_results_to_folder(image, img_name, folder_name, boxes, class_ids, class
 
     if not N:
         print('Sample has no dimples')
-        
-        ax.imshow(image)
-        
         # save img
         img_name = img_name.replace('bmp', 'png')
         IMG_PATH = os.path.join(folder_name, PATH_GOOD)
-        IMG_PATH = os.path.join(IMG_PATH, img_name)
-        plt.savefig(IMG_PATH)
-
-        # IMG_PATH = os.path.join(folder_name, PATH_GOOD)
-        # IMG_PATH = os.path.join(IMG_PATH, img_name)
-        # imsave(IMG_PATH, np.array(image))
-        
+        IMG_PATH = os.path.join(IMG_PATH, img_name)      
     else:
         for i in range(N):
-            #_, ax = plt.subplots(nrows=1, ncols=1, figsize=(16, 16))
-
-            #ax.set_ylim(img_h+10, -10)
-            #ax.set_xlim(-10, img_w+10)
-            #ax.axis('off')
-
-            # call it before drawing a bounding box
-            ax.imshow(image)
-
             # boxes
             y1, x1, y2, x2 = boxes[i]
             print('y1: %d x1: %d y2: %d x2: %d' % (y1, x1, y2, x2))
-            p = patches.Rectangle((x1, y1), x2-x1, y2-y1, linewidth=4, 
-                alpha=0.8, edgecolor='r',facecolor='none')
-
-            # dimple type and score
-            class_id = class_ids[i]
-            class_name = class_names[class_id]
-            score = scores[i] if scores is not None else None
-            text = '{}: {:.3f}'.format(class_name, score) if score else class_name
-
-            ax.text(x1+2, y1+4, text, color='w', size=22, backgroundcolor="none")
-            ax.add_patch(p)
+            image = draw_box(image, boxes[i], 1)
 
         # save img
         img_name = img_name.replace('bmp', 'png')
         IMG_PATH = os.path.join(folder_name, PATH_BAD)
         IMG_PATH = os.path.join(IMG_PATH, img_name)
-        plt.savefig(IMG_PATH)
+    imsave(IMG_PATH, np.array(image))
 
 
 def display_differences(image,
