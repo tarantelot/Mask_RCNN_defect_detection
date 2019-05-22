@@ -178,9 +178,19 @@ def save_results_to_folder(image, img_name, folder_name, boxes, class_ids, class
     N = boxes.shape[0]
 
     if not N:
+        print('Sample has no dimples')
+        
+        ax.imshow(image)
+        
+        # save img
+        img_name = img_name.replace('bmp', 'png')
         IMG_PATH = os.path.join(folder_name, PATH_GOOD)
         IMG_PATH = os.path.join(IMG_PATH, img_name)
-        imsave(IMG_PATH, np.array(image))
+        plt.savefig(IMG_PATH)
+
+        # IMG_PATH = os.path.join(folder_name, PATH_GOOD)
+        # IMG_PATH = os.path.join(IMG_PATH, img_name)
+        # imsave(IMG_PATH, np.array(image))
         
     else:
         for i in range(N):
@@ -191,7 +201,7 @@ def save_results_to_folder(image, img_name, folder_name, boxes, class_ids, class
             #ax.axis('off')
 
             # call it before drawing a bounding box
-            #ax.imshow(image)
+            ax.imshow(image)
 
             # boxes
             y1, x1, y2, x2 = boxes[i]
