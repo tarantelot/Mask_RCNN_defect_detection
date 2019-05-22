@@ -2545,7 +2545,7 @@ class MaskRCNN():
 
         for img_name in img_names:
             PATH_IMG = os.path.join(dir_path, img_name)
-            image = skimage.io.imread(PATH_IMG)
+            image = skimage.io.imread(PATH_IMG, as_gray='True')
 
             # Run object detection
             result = self.detect([image], verbose=1)
