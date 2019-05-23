@@ -55,7 +55,7 @@ DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
 
 
 class DimpleConfig(Config):
-       
+
     # _new configuration
     # Give the configuration a recognizable name
     NAME = "dimple"
@@ -84,32 +84,37 @@ class DimpleConfig(Config):
     # Images are resized such that the smallest side is >= IMAGE_MIN_DIM and
     # the longest side is <= IMAGE_MAX_DIM. In case both conditions can't
     # be satisfied together the IMAGE_MAX_DIM is enforced.
-    IMAGE_MIN_DIM = 128
-    IMAGE_MAX_DIM = 128
+    IMAGE_MIN_DIM = 64
+    IMAGE_MAX_DIM = 64
 
     # Backbone encoder architecture
-    BACKBONE = 'resnet101'
+    BACKBONE = 'resnet50'
 
     # Using smaller anchors because nuclei are small
-    RPN_ANCHOR_SCALES = (8, 16, 32, 64, 128)
+    # RPN_ANCHOR_SCALES = (8, 16, 32, 64, 128)
+    RPN_ANCHOR_SCALES = (4, 8, 16, 32, 64)
 
     # How many anchors per image to use for RPN training
-    RPN_TRAIN_ANCHORS_PER_IMAGE = 320  #
+    # RPN_TRAIN_ANCHORS_PER_IMAGE = 320  
+    RPN_TRAIN_ANCHORS_PER_IMAGE = 160 #
 
     # ROIs kept after non-maximum supression (training and inference)
     POST_NMS_ROIS_TRAINING = 2048
     POST_NMS_ROIS_INFERENCE = 2048
 
     # Number of ROIs per image to feed to classifier/mask heads
-    TRAIN_ROIS_PER_IMAGE = 512
+    # TRAIN_ROIS_PER_IMAGE = 512
+    TRAIN_ROIS_PER_IMAGE = 256
     # Non-max suppression threshold to filter RPN proposals.
     # You can increase this during training to generate more proposals.
     RPN_NMS_THRESHOLD = 0.7
     # Maximum number of ground truth instances to use in one image
-    MAX_GT_INSTANCES = 256
+    # MAX_GT_INSTANCES = 256
+    MAX_GT_INSTANCES = 128
 
     # Max number of final detections
-    DETECTION_MAX_INSTANCES = 400
+    #DETECTION_MAX_INSTANCES = 400
+    DETECTION_MAX_INSTANCES = 200
 
     # Minimum probability value to accept a detected instance
     # ROIs below this threshold are skipped
@@ -120,6 +125,11 @@ class DimpleConfig(Config):
 
     # Threshold number for mask binarization, only used in inference mode
     DETECTION_MASK_THRESHOLD = 0.35
+
+
+
+
+
 
 
 ############################################################
@@ -260,14 +270,6 @@ def train(model):
                 learning_rate=config.LEARNING_RATE,
                 epochs=5,
                 layers='heads')
-#     # Fine tune all layers
-#     # Passing layers="all" trains all layers. You can also 
-#     # pass a regular expression to select which layers to
-#     # train by name pattern.
-#     model.train(dataset_train, dataset_val, 
-#                 learning_rate=config.LEARNING_RATE / 10,
-#                 epochs=5, 
-#                 layers='all')
 
 
 def color_splash(image, mask):
@@ -426,7 +428,7 @@ if __name__ == '__main__':
         # number of classes
         model.load_weights(weights_path, by_name=True, exclude=[
             "mrcnn_class_logits", "mrcnn_bbox_fc",
-            "mrcnn_bbox", "mrcnn_mask", "conv1"])
+            "mrcnn_bbox", "mrcnn_mask"])
     else:
         model.load_weights(weights_path, by_name=True)
 
