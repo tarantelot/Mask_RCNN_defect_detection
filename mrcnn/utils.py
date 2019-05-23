@@ -358,10 +358,8 @@ class Dataset(object):
         # Load image
         image = skimage.io.imread(self.image_info[image_id]['path'])
         # If grayscale. Convert to RGB for consistency.
-        if image.ndim != 1:
-            image = skimage.color.rgb2gray(image)
-            # Extending the size of the image to be (h,w,1)
-            image = image[..., np.newaxis]
+        if image.ndim != 3:
+            image = skimage.color.gray2rgb(image)
         # If has an alpha channel, remove it for consistency
         if image.shape[-1] == 4:
             image = image[..., :3]

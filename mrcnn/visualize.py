@@ -17,11 +17,12 @@ import numpy as np
 from skimage.measure import find_contours
 from skimage.io import imsave, imread
 from skimage import transform
-
 import matplotlib.pyplot as plt
 from matplotlib import patches,  lines
 from matplotlib.patches import Polygon
+
 import IPython.display
+from PIL import Image
 
 # Root directory of the project
 ROOT_DIR = os.path.abspath("../")
@@ -132,6 +133,7 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             # Skip this instance. Has no bbox. Likely lost in image cropping.
             continue
         y1, x1, y2, x2 = boxes[i]
+        print('x1: %d y1: %d x2: %d y2: %d' % (x1, y1, x2, y2))
         if show_bbox:
             p = patches.Rectangle((x1, y1), x2 - x1, y2 - y1, linewidth=2,
                                 alpha=0.7, linestyle="dashed",
@@ -168,8 +170,46 @@ def display_instances(image, boxes, masks, class_ids, class_names,
     ax.imshow(masked_image.astype(np.uint8))
     if auto_show:
         plt.show()
-        
-        
+
+
+def save_masks_to_folder(image, img_name, folder_name, boxes, masks):
+    PATH_GOOD = 'good'
+    PATH_BAD = 'bad'
+
+    N = boxes.shape[0]
+
+    if not N:
+        print('Sample has no dimples')
+        # save img
+        IMG_PATH = os.path.join(folder_name, PATH_GOOD)
+        IMG_PATH = os.path.join(IMG_PATH, img_name)
+        imsave(IMG_PATH, np.array(image))
+    else:
+        # save img
+        FOLDER_PATH = os.path.join(folder_name, PATH_BAD)
+        IMG_PATH = os.path.join(FOLDER_PATH, img_name)
+        imsave(IMG_PATH, np.array(image))
+
+        img_name = img_name.replace('bmp', 'png')
+        img_name, file_extension = img_name.split('.')
+        mask_name = img_name + '_mask.' + file_extension
+        MASK_PATH = os.path.join(FOLDER_PATH, mask_name)
+
+        res = np.where(masks == True)
+        res_mask = np.zeros_like(masks, dtype=np.uint8)
+        print(type(res_mask))
+
+        rows = res[0]
+        cols = res[1]
+
+        res_mask[rows, cols, :] = 1
+        res_mask = res_mask.astype(np.uint8)
+
+        im = Image.fromarray(res_mask) # monochromatic image
+        #imrgb = im.convert('RGB') # color image
+        im.save('foo.png')
+
+
 def save_results_to_folder(image, img_name, folder_name, boxes, class_ids, class_names, 
                         scores=None, ax=None):
     PATH_GOOD = 'good'
@@ -195,6 +235,8 @@ def save_results_to_folder(image, img_name, folder_name, boxes, class_ids, class
         IMG_PATH = os.path.join(folder_name, PATH_BAD)
         IMG_PATH = os.path.join(IMG_PATH, img_name)
     imsave(IMG_PATH, np.array(image))
+
+
 
 
 def display_differences(image,

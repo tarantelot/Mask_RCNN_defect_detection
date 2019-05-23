@@ -12,7 +12,6 @@ import random
 import datetime
 import re
 import math
-import skimage
 import logging
 from collections import OrderedDict
 import multiprocessing
@@ -23,6 +22,8 @@ import keras.backend as K
 import keras.layers as KL
 import keras.engine as KE
 import keras.models as KM
+
+import skimage
 
 from mrcnn import utils
 
@@ -2313,7 +2314,7 @@ class MaskRCNN():
         # Pre-defined layer regular expressions
         layer_regex = {
             # all layers but the backbone
-            "heads": r"(conv1\_.*)|(mrcnn\_.*)|(rpn\_.*)|(fpn\_.*)",
+            "heads": r"(mrcnn\_.*)|(rpn\_.*)|(fpn\_.*)",
             # From a specific Resnet stage and up
             "3+": r"(res3.*)|(bn3.*)|(res4.*)|(bn4.*)|(res5.*)|(bn5.*)|(mrcnn\_.*)|(rpn\_.*)|(fpn\_.*)",
             "4+": r"(res4.*)|(bn4.*)|(res5.*)|(bn5.*)|(mrcnn\_.*)|(rpn\_.*)|(fpn\_.*)",
@@ -2538,6 +2539,8 @@ class MaskRCNN():
             })
         return results
 
+    #__TODO:
+    # has to take images but not a dir_path
     def detect_dimples(self, dir_path):
         images = []
         results = []
@@ -2547,11 +2550,14 @@ class MaskRCNN():
             PATH_IMG = os.path.join(dir_path, img_name)
             image = skimage.io.imread(PATH_IMG, as_gray='True')
 
+            #results.append(result)
+            images.append(image)
+
+        for image in images:
             # Run object detection
             result = self.detect([image], verbose=1)
-
             results.append(result)
-            images.append(image)
+
 
         return images, results, img_names
 
