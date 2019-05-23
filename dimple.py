@@ -260,6 +260,14 @@ def train(model):
                 learning_rate=config.LEARNING_RATE,
                 epochs=5,
                 layers='heads')
+    # Fine tune all layers
+    # Passing layers="all" trains all layers. You can also 
+    # pass a regular expression to select which layers to
+    # train by name pattern.
+    model.train(dataset_train, dataset_val, 
+                learning_rate=config.LEARNING_RATE / 10,
+                epochs=5, 
+                layers='all')
 
 
 def color_splash(image, mask):
