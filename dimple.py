@@ -88,7 +88,7 @@ class DimpleConfig(Config):
     IMAGE_MAX_DIM = 128
 
     # Backbone encoder architecture
-    BACKBONE = 'resnet50'
+    BACKBONE = 'resnet101'
 
     # Using smaller anchors because nuclei are small
     RPN_ANCHOR_SCALES = (8, 16, 32, 64, 128)
