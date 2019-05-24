@@ -269,7 +269,7 @@ def train(model):
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
                 epochs=5,
-                layers='heads')
+                layers='all')
 
 
 def color_splash(image, mask):
