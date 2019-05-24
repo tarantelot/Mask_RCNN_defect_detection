@@ -211,7 +211,7 @@ def save_masks_to_folder(image, img_name, folder_name, boxes, masks):
 
 
 def save_results_to_folder(image, img_name, folder_name, boxes, class_ids, class_names, 
-                        scores=None, ax=None):
+                        scores, ax=None):
     PATH_GOOD = 'good'
     PATH_BAD = 'bad'
     
@@ -231,6 +231,11 @@ def save_results_to_folder(image, img_name, folder_name, boxes, class_ids, class
             image = draw_box(image, boxes[i], 1)
 
         # save img
+        # save img
+        f = lambda s: '_' + '{:.2f}'.format(s)
+        scores_text = ''.join(map(f, scores))
+         
+        img_name = img_name.split('.')[0] + scores_text + '.' + img_name.split('.')[1]
         img_name = img_name.replace('bmp', 'png')
         IMG_PATH = os.path.join(folder_name, PATH_BAD)
         IMG_PATH = os.path.join(IMG_PATH, img_name)
