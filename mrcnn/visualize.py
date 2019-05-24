@@ -214,36 +214,41 @@ def save_results_to_folder(image, img_name, folder_name, boxes, class_ids, class
                         scores, ax=None):
     PATH_GOOD = 'good'
     PATH_BAD = 'bad'
-    
+
     N = boxes.shape[0]
 
     if not N:
         print('Sample has no dimples')
-        # save img
         img_name = img_name.replace('bmp', 'png')
         IMG_PATH = os.path.join(folder_name, PATH_GOOD)
-        IMG_PATH = os.path.join(IMG_PATH, img_name)      
-    else:
-        for i in range(N):
-            # boxes
-            y1, x1, y2, x2 = boxes[i]
-            print('y1: %d x1: %d y2: %d x2: %d' % (y1, x1, y2, x2))
-            image = draw_box(image, boxes[i], 1)
-
-        # save img
-        # save img
-        f = lambda s: '_' + '{:.2f}'.format(s)
-        scores_text = ''.join(map(f, scores))
-         
-        img_name = img_name.split('.')[0] + scores_text + '.' + img_name.split('.')[1]
-        img_name = img_name.replace('bmp', 'png')
-        IMG_PATH = os.path.join(folder_name, PATH_BAD)
         IMG_PATH = os.path.join(IMG_PATH, img_name)
+    else:
+        # there are dimples
+        if N == 1 and scores[0] < 94:
+            # samples with dimple score less then 94 sre not considered to have dimples
+            print('Low score. Sample has no dimples')
+            img_name = img_name.replace('bmp', 'png')
+            IMG_PATH = os.path.join(folder_name, PATH_GOOD)
+            IMG_PATH = os.path.join(IMG_PATH, img_name)
+        else:
+            for i in range(N):
+                # boxes
+                y1, x1, y2, x2 = boxes[i]
+                print('y1: %d x1: %d y2: %d x2: %d' % (y1, x1, y2, x2))
+                image = draw_box(image, boxes[i], 1)
+
+            # save img
+            f = lambda s: '_' + '{:.2f}'.format(s)
+            scores_text = ''.join(map(f, scores))
+             
+            img_name = img_name.split('.')[0] + scores_text + '.' + img_name.split('.')[1]
+            img_name = img_name.replace('bmp', 'png')
+            IMG_PATH = os.path.join(folder_name, PATH_BAD)
+            IMG_PATH = os.path.join(IMG_PATH, img_name)
+
     imsave(IMG_PATH, np.array(image))
 
-
-
-
+    
 def display_differences(image,
                         gt_box, gt_class_id, gt_mask,
                         pred_box, pred_class_id, pred_score, pred_mask,
